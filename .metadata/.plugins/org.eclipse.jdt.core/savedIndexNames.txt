@@ -9,7 +9,6 @@ INDEX VERSION 1.131+E:\Mulesoft\.metadata\.plugins\org.eclipse.jdt.core
 110098482.index
 1666420955.index
 3471067261.index
-1715929551.index
 775004515.index
 1723393731.index
 2958374080.index
