@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+
+	<flow name="claims-api-services-Get-Claim-Details-Flow" doc:id="a836f11e-a82b-4651-8ffe-70a86c49a8b1" >
+		<http:listener doc:name="Listener" doc:id="b80525b5-6a56-4bdb-9d18-303961b2062a" config-ref="HTTP_Listener_config" path="/claims/{claimID}" allowedMethods="GET"/>
+		<os:retrieve doc:name="Retrieve" doc:id="f1ffc5f5-432f-41dc-8c5d-4328161f9c7a" key="#[attributes.uriParams.claimID]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d98ade9c-15bb-4d0a-98f8-653ea6834f50" message="Response from claim Details :::: #[payload]"/>
+	</flow>	
+	
+	</mule>

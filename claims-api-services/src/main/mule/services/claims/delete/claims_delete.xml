@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+
+	<flow name="claims-api-services-Delete-Claim-Details-Flow" doc:id="5b16b761-9170-4460-93e5-9bb5d5a18fe4" >
+		<http:listener doc:name="Listener" doc:id="80ae1fef-2d39-43a3-b40f-17c4c61120c6" config-ref="HTTP_Listener_config" path="/claims/{claimID}"/>
+		<logger level="INFO" doc:name="Logger" doc:id="04eadd08-2567-4775-90a9-bd471d539487" message="Request for Delete claim Details ::: #[payload]"/>
+		<os:remove doc:name="Remove" doc:id="8ad82fac-14df-4b55-837c-2c8167567eaa" key="#[attributes.uriParams.claimID]"/>
+		<ee:transform doc:name="Transform Message" doc:id="8dbabb8c-1afc-4e87-9fe4-b91957c237ac" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	Status:"SUCCESS",
+	Message: "Claim Details Are Deleted Successfully"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0f1819e7-98be-4ac2-9e9e-590c85219df3" message="Response from claim Details are Deleted ::: #[payload]"/>
+	</flow>	
+	
+	
+	
+	
+</mule>

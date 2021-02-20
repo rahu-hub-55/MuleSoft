@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<employee>
+   <empID>786786</empID>
+   <empName>Sachin</empName>
+   <empEmail>sachin.mulesoft@gmail.com</empEmail>
+   <empStatus>A</empStatus>
+</employee>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.mule.tooling.runtime.muleServerLaunchType">
+<stringAttribute key="launch_mule_server_version" value="org.mule.tooling.server.4.3.0.ee"/>
+<stringAttribute key="mule-agent-port" value="51049"/>
+<stringAttribute key="mule-agent-token-auth" value="da717222-ec30-48af-ac21-12f284c1e57e"/>
+<listAttribute key="mule-project-names">
+<listEntry value="dataweave-sample"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="dataweave-sample"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-M-XX:-UseBiasedLocking -M-Dfile.encoding=UTF-8 -M-XX:+UseG1GC -M-XX:+UseStringDeduplication"/>
+</launchConfiguration>

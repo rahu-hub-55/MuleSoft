@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="cfcc4baf-548d-407a-a26d-3f977fd89d5b" basePath="/api" >
+		<http:listener-connection host="0.0.0.0" port="8080" />
+	</http:listener-config>
+	<flow name="dataweaveFlow" doc:id="d08ec405-02de-43ba-95f8-3cd3f8d5528c" >
+		<http:listener doc:name="Listener" doc:id="886a940c-6228-4db0-8d51-f84fe343632f" config-ref="HTTP_Listener_config" path="/transform"/>
+		<logger level="INFO" doc:name="Logger" doc:id="feb078cf-10e1-4a2c-b2a4-eb1988012fd7" message="Request  ::: #[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="fc8b8786-5872-475b-81a5-a626b4ff6dc5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+import dw::Utils
+---
+{ 
+	claim : {  
+	claimID : payload.claimNumber[0 to 5],
+	claimType : payload.'type',
+	customerName : upper((payload.customer.firstName default '')  ++ ' ' ++ (payload.customer.lastName default '')),
+	isSubscriber : Utils::booleanToStr(payload.customer.isSubscribe == true),
+	
+	address : payload.customer.address map(add, index) -> {
+		HouseNo : add.addressLine1,
+		Street : add.Street,
+		Country : add.Country,
+		isPrimary : Utils::booleanToStr(add.isPrimary == true)
+	
+	},
+	communicationAddress : (payload.customer.address filter(add, index) -> add.isPrimary == true)[0],
+	PaymentAmount : round(payload.Payments.amount),
+	Total : payload.Payments.amountDue + payload.Payments.amountPaid,
+	Total : sum([payload.Payments.amountDue as Number, payload.Payments.amountPaid as Number]),
+	updatedDate : now(),
+	updatedDay : now().day,
+	updatedMonth : now().month,	
+	updatedYear : now().year,
+	updatedHour : now().hour,
+	updatedMinutes : now().minutes,
+	updatedMilli : now().milliseconds,
+	updatedNano : now().nanoseconds,
+	updatedQuar : now().quarter,
+	updatedDW : now().dayOfWeek,
+	updatedDY : now().dayOfYear,
+	updatedOSS : now().offsetSeconds,
+    dateOfBirth : (payload.customer.dateOfBirth as DateTime) as Date {format: "dd/MM/YYYY"},
+    dateOfBirthSeconds : (payload.customer.dateOfBirth as Time) as Time {format: "HH:mm:ss.SS"}
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="2f3b2ff5-f487-47ec-8539-95c2932dcba5" message="Response ::: #[payload]"/>
+	</flow>
+</mule>

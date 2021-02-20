@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	
+	<flow name="claims-api-services-GET-ALL-Claim-Details-Flow" doc:id="2e9aed20-441f-4c02-aec9-cdeb39b23828" >
+		<http:listener doc:name="Listener" doc:id="478fa651-0891-40fd-b515-d23adba55a06" config-ref="HTTP_Listener_config" path="/claims"/>
+		<logger level="INFO" doc:name="Logger" doc:id="2b529a7d-3e4f-43ef-8dcb-d42ad5eb134c" message="Request for GET All claims ::: #[payload]"/>
+		<os:retrieve-all doc:name="Retrieve all" doc:id="a7c5c65a-24e2-4f21-bb70-d9a49050f357" />
+		<ee:transform doc:name="Transform Message" doc:id="49d49bf5-c357-4e6e-9c6a-873c969c1cb2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="785de393-d495-4ee5-983d-93f599d6e4ea" message="Response from GET ALL Claims ::: #[payload]"/>
+	</flow>	
+	
+	
+	
+	</mule>

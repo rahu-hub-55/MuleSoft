@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	
+	<flow name="claims-api-services-Delete-All-Claim-Flow" doc:id="08a15534-2936-472e-b12b-83a9f03d3bc1" >
+		<http:listener doc:name="Listener" doc:id="56517703-7064-4745-be37-510f7aef9d46" config-ref="HTTP_Listener_config" path="/claims" allowedMethods="DELETE"/>
+		<logger level="INFO" doc:name="Logger" doc:id="4f5c13b4-a93a-4107-a7fc-4835de001a47" message="Request for DELETE ALL Claims :::: #[payload]"/>
+		<os:clear doc:name="Clear" doc:id="b4361d52-40c9-4ca4-b12b-b7e84221f7f2" />
+		<ee:transform doc:name="Transform Message" doc:id="160d959c-45d6-4aad-9e2b-eddfbb5c81d7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	Status:"SUCCESS",
+	Message: "ALL Claims DELETED Sucessfully",
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="e43fae47-6db3-4312-b893-16c405c09838" message="Response from DELETE ALL CLAIMS :::: #[payload]"/>
+	</flow>	
+	
+	
+</mule>

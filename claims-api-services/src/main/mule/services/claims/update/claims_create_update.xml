@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<flow name="claims-api-services-Updated-Claim-Details-Flow" doc:id="813a73b1-6aef-4f38-9012-6cde8e1c4afd" >
+		<http:listener doc:name="Listener" doc:id="aab2c0ce-12f8-4cc7-8a95-78c680097e6d" config-ref="HTTP_Listener_config" path="/claims/{claimID}" allowedMethods="PUT"/>
+		<logger level="INFO" doc:name="Logger" doc:id="9f2c3037-34a7-4644-8925-a71c110dcc40" message="Request for Update Claims :::#[payload]"/>
+		<flow-ref doc:name="Flow Reference" doc:id="8ea3b48d-c087-46be-badb-54f6efb7306f" name="claims_update_sub_Flow" />
+		<logger level="INFO" doc:name="Logger" doc:id="b64b5377-4898-495d-81cc-8cd300e4a342" message="Response from claim Details are Updated  :::: #[payload]"/>
+	</flow>
+	<sub-flow name="claims_update_sub_Flow" doc:id="6f74544f-602a-47bf-a7b0-c0be8266a775">
+		<set-variable value="#[attributes.uriParams.claimID]" doc:name="Set Variable" doc:id="3121c963-4cf9-4504-8104-17dfa930fad8" variableName="claimNumber" />
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="e68e251e-d602-4160-aa4b-4455dabdc22a" variableName="originalRequest" />
+		<os:contains doc:name="Contains" doc:id="506b234c-6e5d-4748-85d8-d53c0410aa53" key="#[vars.claimNumber]" />
+		<logger level="INFO" doc:name="Logger" doc:id="2960b065-c3f7-46b2-a7d5-dc5a206f4d34" message="claim Number presented ::: #[payload]"/>
+		<choice doc:name="Choice" doc:id="e4f75c0e-932a-487f-9e66-57918b7f251b" >
+			<when expression="#[payload == true]">
+				<os:store doc:name="Store" doc:id="a8e40d16-ed3d-4b52-b86e-8fb2a968c266" key="#[vars.claimNumber]">
+			<os:value><![CDATA[#[vars.originalRequest]]]></os:value>
+		</os:store>
+				<ee:transform doc:name="Transform Message" doc:id="90f9bfd3-5f40-4bc8-a973-09eff8cc33f3">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	Status: "SUCCESS",
+	Message: "Claim Details Are Updated Successfully "
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="e18d538b-2ae6-418c-8fe1-d162011494d6" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	status: 'FAILED',
+	message: 'Claim Number Not Found and Claim Details Not Updated'
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+		
+	
+	
+	
+	
+
+</mule>
